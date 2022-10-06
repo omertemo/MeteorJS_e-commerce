@@ -1,4 +1,3 @@
-import { each } from "jquery";
 import SimpleSchema from "simpl-schema";
 
 new ValidatedMethod({
@@ -8,28 +7,47 @@ new ValidatedMethod({
   }).validator(),
   run: async function (data) {
     this.unblock();
-    if (Meteor.userId() == null) {
-      console.log(Meteor.userId());
-      throw new Meteor.Error("Kullanıcı girişi yapınız.");
+
+    // parentId'si _id'ye eşit olan tüm docların parentId'sini silinen category'nin parentId'si olarak setle
+    // Tüm ancestorIds kısımlarından bu _id'yi pull et
+    // Product'ların categories'kısımında varsa yine  pull et
+    const { _id } = data;
+    let currentCategory = Categories.findOne({ _id: _id });
+    const currentsParent = currentCategory.parentCategoryId;
+
+    if (currentCategory.name == "All") {
+      throw new Meteor.Error("Root category cannot be deleted");
     }
 
-    const { _id } = data;
-    let obj = Categories.findOne({ _id: _id });
-    let obj2 = Object;
-    if (obj.ancestorIds.length == 2) {
-      Categories.remove({ _id: obj._id });
-    } else if (obj.ancestorIds.length == 1) {
-      Categories.remove({ _id: obj._id });
-      Categories.remove({ parentCategoryId: obj._id });
-    } else if (obj.ancestorIds.length == 0) {
-      obj2 = Categories.find({ parentCategoryId: obj._id });
-      obj2.forEach(function (data1) {
-        Categories.remove({ parentCategoryId: data1._id });
-        Categories.remove({ _id: data1._id });
-      });
-      Categories.remove({ _id: obj._id });
-    }
+    Categories.update(
+      { parentCategoryId: currentCategory._id },
+      {
+        $set: {
+          parentCategoryId: currentsParent,
+        },
+      },
+      { multi: true }
+    );
+
+    // Categori'leri arasında currentCategory._id var olan productlardan bu currentCategory._id'yi pull et
+
+    // Products.update(
+    //   { categories: currentCategory._id },
+    //   {
+    //     $pull: {
+    //       categories: currentCategory._id,
+    //     },
+    //   }
+    // );
+
+    // ancestorIds'leri arasında currentCategory._id var olan category'lerden bu currentCategory._id'yi pull et
+    Categories.update(
+      { ancestorIds: currentCategory._id },
+      { $pull: { ancestorIds: currentCategory._id } },
+      { multi: true }
+    );
+
+    // currentCategory'i sil
+    Categories.remove({ _id: currentCategory._id });
   },
 });
-
-//Burada sadece else if (obj.ancestorIds.length == 0) bu kısmı kullansak ne olur

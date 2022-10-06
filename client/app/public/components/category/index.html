@@ -1,0 +1,17 @@
+<template name="publicComponentsCategory">
+  <div class="ps-5">
+    <div class="d-flex justify-content-between border my-1 rounded">
+      <div>
+        {{category.name}}
+      </div>
+      <div class="">
+        <a href="#" class="btn btn-danger brd-delete">Sil</a>
+        <a href="#" class="btn btn-warning brd-update" data-bs-toggle="modal" data-bs-target="#brdPublicModalsUpdateCategoryModal">Güncelle</a>
+      </div>
+    </div>
+
+    {{#each category.childrens}}
+    {{> publicComponentsCategory category=this}}
+    {{/each}}
+  </div>
+</template>

@@ -1,7 +1,7 @@
 import SimpleSchema from "simpl-schema";
 
 new ValidatedMethod({
-  name: "app.category.list",
+  name: "app.categories.list",
   validate: new SimpleSchema({
     options: { type: QueryOptionsSchema, optional: true },
   }).validator(),

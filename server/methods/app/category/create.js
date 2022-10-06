@@ -2,28 +2,37 @@ import SimpleSchema from "simpl-schema";
 
 new ValidatedMethod({
   name: "app.category.create",
+
+  // mixins: [SignedInMixin, RoleMixin],
+  // roles: ["roles.admin"],
   validate: new SimpleSchema({
     category: CategorySchema.omit("ancestorIds"),
   }).validator(),
   run: function (data) {
     this.unblock();
-    if (Meteor.userId() == null) {
-      console.log(Meteor.userId());
-      throw new Meteor.Error("Kullanıcı girişi yapınız.");
-    }
 
     const { category } = data;
+    console.log(data);
+    let parentAncestorIds;
     if (category.parentCategoryId == null) {
       category.ancestorIds = [];
+      console.log("deneme");
     } else {
-      const parentAncestorIds = Categories.findOne({
-        _id: category.parentCategoryId,
-      }).ancestorIds;
+      console.log("denemealttaki");
 
-      category.ancestorIds = parentAncestorIds.push(category.parentCategoryId);
+      const parentCategory = Categories.findOne({
+        _id: category.parentCategoryId,
+      });
+      parentAncestorIds = parentCategory.ancestorIds;
+
+      parentAncestorIds.push(category.parentCategoryId);
+      console.log(parentAncestorIds);
     }
 
-    const id = Categories.insert(category);
-    return Categories.findOne({ _id: id });
+    Categories.insert({
+      name: category.name,
+      parentCategoryId: category.parentCategoryId,
+      ancestorIds: parentAncestorIds,
+    });
   },
 });

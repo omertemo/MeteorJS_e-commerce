@@ -1,0 +1,40 @@
+<template name="publicModalsAddCategory">
+  {{#let _categories=(state.get 'categories')}}
+
+  <div class="modal" id="brdPublicModalsAddCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="brdPublicModalsAddCategoryForm">
+            <div class="mb-3">
+              <label for="brdCategoryNameField" class="form-label">Category Name</label>
+              <input type="text" class="form-control" id="brdCategoryNameField" aria-describedby="categoryHelp" name="name" />
+            </div>
+            <div class="mb-3">
+              <select class="form-select mt-3" name="parentCategoryId" aria-label="Default select example">
+                <!-- Burda bişeyi yanlış -->
+                {{#each _categories}}
+                <option value="{{_id}}">{{name}}</option>
+                {{/each}}
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-secondary" data-bs-dismiss="modal">
+            Close
+          </button>
+          <button type="submit" form="brdPublicModalsAddCategoryForm" class="btn btn-primary">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  {{/let}}
+
+</template>

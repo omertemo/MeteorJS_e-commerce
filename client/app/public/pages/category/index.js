@@ -1,13 +1,10 @@
-import Swal from "sweetalert2";
-
-Template.publicPagesHome.onCreated(function () {
+Template.publicPagesCategory.onCreated(function () {
   this.state = new ReactiveDict(null, {
     categories: null,
   });
-  AppUtil.temp.set("count", 1);
 });
 
-Template.publicPagesHome.onRendered(function () {
+Template.publicPagesCategory.onRendered(function () {
   const self = this;
 
   this.autorun(function () {

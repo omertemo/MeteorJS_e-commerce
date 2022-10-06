@@ -1,0 +1,21 @@
+<template name="publicPagesCategory">
+  {{#let _categories=(state.get 'categories') }}
+  <div class="publicPagesHome container">
+    <div class="row my-2">
+      <div class="d-flex justify-content-between text-white">
+        <h1 class="text-dark">Categories</h1>
+        <button class=" btn btn-success btn-sm float-end" data-bs-toggle="modal" data-bs-target="#brdPublicModalsAddCategoryModal">
+          Add Category
+        </button>
+      </div>
+    </div>
+    <div class="row mt-3">
+      {{#each _categories.childrens}}
+      {{> publicComponentsCategory category=this}}
+      {{/each}}
+    </div>
+  </div>
+  {{/let}}
+  {{> publicModalsAddCategory}}
+  {{> publicModalsUpdateCategory}}
+</template>

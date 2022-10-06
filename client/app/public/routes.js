@@ -6,3 +6,10 @@ FlowRouter.route("/", {
     this.render("publicLayoutsDefault", { page: "publicPagesHome" });
   },
 });
+
+FlowRouter.route("/category", {
+  name: "public.category",
+  action: function (params, queryParams) {
+    this.render("publicLayoutsDefault", { page: "publicPagesCategory" });
+  },
+});
