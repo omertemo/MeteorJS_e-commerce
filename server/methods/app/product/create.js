@@ -7,10 +7,7 @@ new ValidatedMethod({
   }).validator(),
   run: function (data) {
     this.unblock();
-    if (Meteor.userId() == null) {
-      console.log(Meteor.userId());
-      throw new Meteor.Error("Kullanıcı girişi yapınız.");
-    }
+
     const { product } = data;
 
     const id = Products.insert(product);

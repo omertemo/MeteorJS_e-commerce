@@ -1,3 +1,37 @@
 <template name="publicPagesHome">
-  <h1>publicPagesHome</h1>
+
+  {{#let _categories=(state.get 'categories') _products=(state.get 'products')}}
+  <div class="container">
+    <div class="row">
+      <div class="col-3">
+        <div class="row mt-3">
+          {{#each _categories.childrens}}
+          {{> publicComponentsCategory category=this}}
+          {{/each}}
+        </div>
+      </div>
+      <div class="col-9">
+        <div class="row">
+          {{#each _products}}
+
+          <div class="col-sm-4">
+            <div class="card">
+              <div style="width: 17.5rem; height: 18rem;background:url('{{imageUrl}}') center no-repeat; background-size: contain;margin: 10px auto;">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title">{{title}}</h5>
+                <p class="card-text">$ {{price}}</p>
+                <a href="#" class="btn btn-primary float-end">Buy</a>
+              </div>
+            </div>
+          </div>
+          {{/each}}
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  {{/let}}
+
 </template>

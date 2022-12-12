@@ -1,15 +1,12 @@
-import Swal from "sweetalert2";
-
 Template.publicPagesHome.onCreated(function () {
   this.state = new ReactiveDict(null, {
-    categories: null,
+    categories: [],
+    products: [],
   });
-  AppUtil.temp.set("count", 1);
 });
 
 Template.publicPagesHome.onRendered(function () {
   const self = this;
-
   this.autorun(function () {
     AppUtil.refreshTokens.get("categories");
 
@@ -44,6 +41,17 @@ Template.publicPagesHome.onRendered(function () {
 
         self.state.set("categories", formattedCategory);
       }
+    });
+  });
+
+  this.autorun(function () {
+    AppUtil.refreshTokens.get("refreshShopProduct");
+    Meteor.call("app.product.list", {}, function (error, result) {
+      if (error) {
+        console.log("error", error);
+        return;
+      }
+      self.state.set("products", result.products);
     });
   });
 });

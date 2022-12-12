@@ -13,3 +13,9 @@ FlowRouter.route("/category", {
     this.render("publicLayoutsDefault", { page: "publicPagesCategory" });
   },
 });
+FlowRouter.route("/product", {
+  name: "public.category",
+  action: function (params, queryParams) {
+    this.render("publicLayoutsDefault", { page: "publicPagesProduct" });
+  },
+});

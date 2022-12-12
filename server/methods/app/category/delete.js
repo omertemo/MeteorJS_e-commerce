@@ -7,15 +7,12 @@ new ValidatedMethod({
   }).validator(),
   run: async function (data) {
     this.unblock();
-
-    // parentId'si _id'ye eşit olan tüm docların parentId'sini silinen category'nin parentId'si olarak setle
-    // Tüm ancestorIds kısımlarından bu _id'yi pull et
-    // Product'ların categories'kısımında varsa yine  pull et
+    
     const { _id } = data;
-    let currentCategory = Categories.findOne({ _id: _id });
+    const currentCategory = Categories.findOne({ _id: _id });
     const currentsParent = currentCategory.parentCategoryId;
 
-    if (currentCategory.name == "All") {
+    if (currentCategory.parentCategoryId == null) {
       throw new Meteor.Error("Root category cannot be deleted");
     }
 
@@ -29,6 +26,11 @@ new ValidatedMethod({
       { multi: true }
     );
 
+    Categories.update(
+      { ancestorIds: currentCategory._id },
+      { $pull: { ancestorIds: currentCategory._id } },
+      { multi: true }
+    );
     // Categori'leri arasında currentCategory._id var olan productlardan bu currentCategory._id'yi pull et
 
     // Products.update(
@@ -41,11 +43,6 @@ new ValidatedMethod({
     // );
 
     // ancestorIds'leri arasında currentCategory._id var olan category'lerden bu currentCategory._id'yi pull et
-    Categories.update(
-      { ancestorIds: currentCategory._id },
-      { $pull: { ancestorIds: currentCategory._id } },
-      { multi: true }
-    );
 
     // currentCategory'i sil
     Categories.remove({ _id: currentCategory._id });
